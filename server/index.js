@@ -24,23 +24,39 @@ const app = express();
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
-  process.env.CLIENT_URL // Add your Vercel URL as CLIENT_URL in environment variables
-].filter(Boolean); // Remove undefined values
+  'https://growthcast.vercel.app',
+  process.env.CLIENT_URL
+].filter(Boolean);
+
+console.log('🔒 CORS allowed origins:', allowedOrigins);
+console.log('🌍 NODE_ENV:', process.env.NODE_ENV);
+console.log('🌐 CLIENT_URL:', process.env.CLIENT_URL);
 
 // Middleware
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
+  origin: function (origin, callback) {
+    console.log('📨 Request origin:', origin);
     
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV === 'development') {
+    // Allow requests with no origin (like mobile apps, Postman, curl)
+    if (!origin) {
+      console.log('✅ No origin - allowing');
+      return callback(null, true);
+    }
+    
+    // Check if origin is in allowed list
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log('✅ Origin allowed:', origin);
       callback(null, true);
     } else {
+      console.log('❌ Origin blocked:', origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
