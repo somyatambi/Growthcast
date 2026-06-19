@@ -1,4 +1,4 @@
-# GrowthCast - Business Analytics & Data Cleaning Platform
+# GrowthCast - Business Analytics & Data Cleaning Platform  
 
 A clean, intuitive SaaS platform for small business and factory owners to clean Excel files, visualize business data, and predict future growth.
 
